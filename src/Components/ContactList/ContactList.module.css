@@ -1,0 +1,21 @@
+.item {
+  color: #3a1b14;
+  display: flex;
+
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.button {
+  margin-top: 10px;
+  margin-left: 20px;
+  border-radius: 4px;
+  background-color: white;
+  color: #3a1b14;
+}
+
+.button:hover,
+.button:focus {
+  background-color: green;
+  color: white;
+}

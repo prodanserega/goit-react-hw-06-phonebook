@@ -1,70 +1,81 @@
-import { useState } from "react";
+import { Component } from "react";
 import { v4 as uuid } from "uuid";
+import { connect } from "react-redux";
+import contactsActions from "../../redux/contacts/contacts-actions";
 
 import s from "../ContactForm/ContactForm.module.css";
 
-export default function ContactForm({ onAdd, onCheckUnique }) {
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+const INIITAL_STATE = {
+  name: "",
+  phone: "",
+};
 
-  const handelChangeForm = (e) => {
-    const { name, value } = e.currentTarget;
+class ContactForm extends Component {
+  state = INIITAL_STATE;
 
-    switch (name) {
-      case "name":
-        setName(value);
-        break;
-      case "phone":
-        setPhone(value);
-        break;
-      default:
-        return;
-    }
+  handelChangeForm = ({ target }) => {
+    const { name, value } = target;
+    this.setState({ [name]: value });
   };
 
-  const handleFormSubmit = (e) => {
+  handleFormSubmit = (e) => {
     e.preventDefault();
 
-    const isValidatedForm = validateForm();
+    const { name, phone } = this.state;
+    const { onAdd } = this.props;
+    const isValidatedForm = this.validateForm();
     if (!isValidatedForm) return;
     onAdd({ id: uuid(), name, phone });
-    resetForm();
+    this.resetForm();
   };
 
-  const validateForm = () => {
+  validateForm = () => {
+    const { name, phone } = this.state;
+    const { onCheckUnique } = this.props;
     if (!name || !phone) {
       alert("Some filed is empty");
       return false;
     }
+
     return onCheckUnique(name);
   };
 
-  const resetForm = () => {
-    setName("");
-    setPhone("");
-  };
+  resetForm = () => this.setState(INIITAL_STATE);
 
-  return (
-    <form className={s.form} onSubmit={handleFormSubmit}>
-      <input
-        className={s.input}
-        type="text"
-        name="name"
-        placeholder="Enter name"
-        value={name}
-        onChange={handelChangeForm}
-      />
-      <input
-        className={s.input}
-        type="tel"
-        name="phone"
-        placeholder="Enter phone number"
-        value={phone}
-        onChange={handelChangeForm}
-      />
-      <button className={s.button} type="submit">
-        Add Contact
-      </button>
-    </form>
-  );
+  render() {
+    const { name, phone } = this.state;
+    return (
+      <form className={s.form} onSubmit={this.handleFormSubmit}>
+        <input
+          className={s.input}
+          type="text"
+          name="name"
+          placeholder="Enter name"
+          value={name}
+          onChange={this.handelChangeForm}
+        />
+        <input
+          className={s.input}
+          type="tel"
+          name="phone"
+          placeholder="Enter phone number"
+          value={phone}
+          onChange={this.handelChangeForm}
+        />
+        <button className={s.button} type="submit">
+          Add Contact
+        </button>
+      </form>
+    );
+  }
 }
+
+const mapStateToProps = (state) => ({
+  contacts: state.contacts.items,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  onSubmit: (contact) => dispatch(contactsActions.addContact(contact)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);

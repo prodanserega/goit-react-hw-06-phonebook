@@ -1,4 +1,5 @@
-import todosReducer from "./contacts-reducer";
+import contactsReducer from "../redux/contacts/contacts-reducer";
+
 import { configureStore } from "@reduxjs/toolkit";
 import {
   persistStore,
@@ -31,7 +32,7 @@ const contactsPersistConfig = {
 
 const store = configureStore({
   reducer: {
-    contacts: persistReducer(contactsPersistConfig, todosReducer),
+    contacts: persistReducer(contactsPersistConfig, contactsReducer),
   },
   middleware,
   devTools: process.env.NODE_ENV === "development",
@@ -39,5 +40,4 @@ const store = configureStore({
 
 const persistor = persistStore(store);
 
-// eslint-disable-next-line import/no-anonymous-default-export
 export default { store, persistor };

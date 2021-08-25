@@ -7,7 +7,7 @@ import s from "../ContactList/ContactList.module.css";
 
 const ContactListItem = ({ id, name, phone, onRemove }) => {
   return (
-    <li className={s.item}>
+    <li key={id} className={s.item}>
       {name}: {phone}{" "}
       <button className={s.button} onClick={() => onRemove(id)}>
         delete

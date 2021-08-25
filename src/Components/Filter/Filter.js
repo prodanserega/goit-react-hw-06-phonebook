@@ -12,7 +12,7 @@ const Filter = ({ filter, onChange }) => {
         type="text"
         name="filter"
         value={filter}
-        onChange={({ target }) => onChange(target.value)}
+        onChange={onChange}
         placeholder="Enter name for Search"
       />
     </form>
@@ -29,7 +29,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onChange: (ev) => dispatch(contactsActions.changeFilter(ev.target.value)),
+  onChange: (e) => dispatch(contactsActions.changeFilter(e.target.value)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Filter);

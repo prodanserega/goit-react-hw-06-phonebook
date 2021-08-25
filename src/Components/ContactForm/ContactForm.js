@@ -1,17 +1,15 @@
 import { Component } from "react";
-import { v4 as uuid } from "uuid";
+
 import { connect } from "react-redux";
 import contactsActions from "../../redux/contacts/contacts-actions";
 
 import s from "../ContactForm/ContactForm.module.css";
 
-const INIITAL_STATE = {
-  name: "",
-  phone: "",
-};
-
 class ContactForm extends Component {
-  state = INIITAL_STATE;
+  state = {
+    name: "",
+    phone: "",
+  };
 
   handelChangeForm = ({ target }) => {
     const { name, value } = target;
@@ -21,26 +19,30 @@ class ContactForm extends Component {
   handleFormSubmit = (e) => {
     e.preventDefault();
 
-    const { name, phone } = this.state;
-    const { onAdd } = this.props;
-    const isValidatedForm = this.validateForm();
-    if (!isValidatedForm) return;
-    onAdd({ id: uuid(), name, phone });
+    const { name } = this.state;
+    const { contacts } = this.props;
+
+    if (!this.state.name || !this.state.phone) {
+      alert("Enter the name!");
+      return;
+    }
+
+    if (
+      contacts.find((item) => item.name.toLowerCase() === name.toLowerCase())
+    ) {
+      alert(`${name} already exists. Try another name`);
+      return;
+    }
+
+    this.props.onSubmit(this.state);
     this.resetForm();
   };
 
-  validateForm = () => {
-    const { name, phone } = this.state;
-    const { onCheckUnique } = this.props;
-    if (!name || !phone) {
-      alert("Some filed is empty");
-      return false;
-    }
-
-    return onCheckUnique(name);
-  };
-
-  resetForm = () => this.setState(INIITAL_STATE);
+  resetForm = () =>
+    this.setState({
+      name: "",
+      phone: "",
+    });
 
   render() {
     const { name, phone } = this.state;

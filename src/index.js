@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import store from "./redux/store";
+import { store, persistor } from "./redux/store.js";
 import "modern-normalize/modern-normalize.css";
 import "./index.css";
 import App from "./Components/App";
@@ -11,7 +11,7 @@ import App from "./Components/App";
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <PersistGate loading={"loading"} persistor={store.persistor}>
+      <PersistGate loading={"loading"} persistor={persistor}>
         <App />
       </PersistGate>
     </Provider>
